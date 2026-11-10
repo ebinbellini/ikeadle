@@ -9,11 +9,11 @@
     <header class="game-header">
         <h1>Kund mot kund</h1>
         <p>
-            {{.MinPlayers}}–{{.MaxPlayers}} kunder, {{.Rounds}} rundor och
-            {{.GuessSeconds}} sekunder per gissning. Alla ser samma vara och
-            har en gissning per runda. Den som kommer närmast priset vinner
-            rundan och högst totalpoäng vinner matchen. Ett exakt pris på öret
-            ger 5 000 poäng.
+            {{.MinPlayers}}-{{.MaxPlayers}} spelare, {{.Rounds}} rundor och
+            {{.GuessSeconds}} sekunder per gissning. Alla ser samma IKEA-vara
+            och har en gissning per runda. Den som kommer närmast priset vinner
+            rundan och högst totalpoäng vinner matchen. Ett exakt pris ger
+            5 000 poäng.
         </p>
     </header>
 
@@ -157,12 +157,12 @@
         <div class="strid-card" id="strid-recap-card" hidden>
             <h2>Recap</h2>
             <p class="strid-hint">
-                Alla varor och vad varje kund gissade. Gröna rutor är exakta,
+                Alla varor och vad varje spelare gissade. Gröna rutor är exakta,
                 röda är rundans närmaste gissning.
             </p>
             <div class="strid-recap-wrap" id="strid-recap"></div>
             <p class="strid-hint" id="strid-recap-hint" hidden>
-                Svep i tabellen för att se alla kunder.
+                Svep i tabellen för att se alla spelare.
             </p>
         </div>
     </section>

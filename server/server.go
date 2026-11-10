@@ -10,18 +10,18 @@ import (
 )
 
 type Product struct {
-	ID          string  `json:"id"`
-	Name        string  `json:"name"`
-	Brand       string  `json:"brand,omitempty"`
+	ID   string `json:"id"`
+	Name string `json:"name"`
+	// Description is IKEA's type and design, e.g. "Bokhylla, vit".
+	Description string  `json:"description,omitempty"`
 	URL         string  `json:"url"`
 	ImageURL    string  `json:"image_url,omitempty"`
 	Price       float64 `json:"price"`
 	PriceUnit   string  `json:"price_unit"`
-	Amount      string  `json:"amount,omitempty"`
-	CompareUnit string  `json:"compare_unit,omitempty"`
-	// Promotion is the campaign label when the item is on offer,
-	// e.g. "Klubbpris" or "Alltid bra pris!".
-	Promotion    string    `json:"promotion,omitempty"`
+	// Amount is IKEA's measurement text, e.g. "80x28x202 cm".
+	Amount string `json:"amount,omitempty"`
+	// CategoryPath is IKEA's own breadcrumb, e.g.
+	// "Förvaring / Hyllor & bokhyllor / Bokhyllor".
 	CategoryPath string    `json:"category_path"`
 	ScrapedAt    time.Time `json:"scraped_at"`
 }
@@ -33,9 +33,8 @@ type Category struct {
 	Products []Product `json:"products,omitempty"`
 }
 
-// CategoryMap holds every scraped category keyed by its full slug path
-// (e.g. "skafferi/kaffe/bryggkaffe"). The scraper replaces it through
-// SetCategoryMap.
+// CategoryMap holds every scraped category keyed by its category id (e.g.
+// "st001" for Förvaring). The scraper replaces it through SetCategoryMap.
 var CategoryMap = make(map[string]Category)
 
 var categoryMu sync.RWMutex
@@ -70,7 +69,10 @@ func Run() {
 	mux := newMux()
 
 	listenAddr := os.Getenv("ADDR")
-	fmt.Println("Starting server on", listenAddr)
+	if listenAddr == "" {
+		listenAddr = ":2760"
+	}
+	fmt.Println("Starting IKEAdle on", listenAddr)
 	err := http.ListenAndServe(listenAddr, mux)
 	if err != nil {
 		log.Fatalf("Error starting server: %v", err)

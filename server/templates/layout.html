@@ -5,13 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/style.css">
     <link rel="icon" href="/icons/favicon.ico" sizes="32x32">
     <link rel="icon" href="/icons/favicon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
     <link rel="manifest" href="/icons/manifest.json">
-    <meta name="theme-color" content="#ee1c2e">
+    <meta name="theme-color" content="#0058a3">
+    <meta name="description" content="IKEAdle - gissa priset på varor ur IKEA-sortimentet.">
     <title>{{.Title}}</title>
     <script src="/navbar.js" defer></script>
     {{block "head" .}}{{end}}
@@ -20,6 +21,10 @@
     {{template "navbar" .}}
 
     {{block "content" .}}{{end}}
+
+    <footer class="site-footer">
+        <p>Ett inofficiellt fanspel. IKEA® är ett varumärke som tillhör Inter IKEA Systems B.V.</p>
+    </footer>
 
     {{block "scripts" .}}{{end}}
 </body>

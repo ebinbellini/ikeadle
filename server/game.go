@@ -14,7 +14,7 @@ import (
 const (
 	// dailyStateFile keeps the product of the day across restarts so that the
 	// answer does not change when the server restarts during the day.
-	dailyStateFile  = "/tmp/hemkopdle_daily.json"
+	dailyStateFile  = "/tmp/ikeadle_daily.json"
 	dailyDateLayout = "2006-01-02"
 )
 
@@ -38,12 +38,13 @@ var (
 // publicProduct is the part of a Product the frontend may see. The price is
 // deliberately left out: that is what the player has to guess.
 type publicProduct struct {
-	ID        string `json:"id"`
-	Name      string `json:"name"`
-	Brand     string `json:"brand,omitempty"`
-	ImageURL  string `json:"image_url,omitempty"`
-	Amount    string `json:"amount,omitempty"`
-	PriceUnit string `json:"price_unit,omitempty"`
+	ID          string `json:"id"`
+	Name        string `json:"name"`
+	Description string `json:"description,omitempty"`
+	ImageURL    string `json:"image_url,omitempty"`
+	Amount      string `json:"amount,omitempty"`
+	PriceUnit   string `json:"price_unit,omitempty"`
+	Category    string `json:"category,omitempty"`
 }
 
 type dailyResponse struct {
@@ -316,12 +317,13 @@ func guessScore(product Product, guess float64) guessResponse {
 // price, from a product.
 func toPublicProduct(product Product) publicProduct {
 	return publicProduct{
-		ID:        product.ID,
-		Name:      product.Name,
-		Brand:     product.Brand,
-		ImageURL:  product.ImageURL,
-		Amount:    product.Amount,
-		PriceUnit: product.PriceUnit,
+		ID:          product.ID,
+		Name:        product.Name,
+		Description: product.Description,
+		ImageURL:    product.ImageURL,
+		Amount:      product.Amount,
+		PriceUnit:   product.PriceUnit,
+		Category:    product.CategoryPath,
 	}
 }
 

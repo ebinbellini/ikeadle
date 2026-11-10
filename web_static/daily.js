@@ -4,7 +4,7 @@
  * per date.                                                         *
  * ---------------------------------------------------------------- */
 
-const DAILY_STORAGE_PREFIX = "hemkopdle:daily:";
+const DAILY_STORAGE_PREFIX = "ikeadle:daily:";
 
 function daily_config(date) {
     return {

@@ -1,13 +1,13 @@
 {
-  "name": "Hemköpdle",
-  "short_name": "Hemköpdle",
-  "description": "Gissa priset på dagens vara från Hemköp.",
+  "name": "IKEAdle",
+  "short_name": "IKEAdle",
+  "description": "Gissa priset på varor ur IKEA-sortimentet.",
   "lang": "sv",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
-  "background_color": "#f8f7f6",
-  "theme_color": "#ee1c2e",
+  "background_color": "#ffffff",
+  "theme_color": "#0058a3",
   "icons": [
     { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
     { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png" },

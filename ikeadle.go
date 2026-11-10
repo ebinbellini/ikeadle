@@ -1,28 +1,31 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 	"log"
 	"os"
 	"strings"
 
-	"github.com/ebinbellini/hemkopdle/scraper"
-	"github.com/ebinbellini/hemkopdle/server"
+	"github.com/ebinbellini/ikeadle/scraper"
+	"github.com/ebinbellini/ikeadle/server"
 	"github.com/joho/godotenv"
 	"github.com/robfig/cron/v3"
 )
 
 func main() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
+	if err := godotenv.Load(); err != nil {
+		log.Println("No .env file found, using environment variables")
 	}
 
-	fmt.Println("Starting server")
+	addr := strings.TrimSpace(os.Getenv("ADDR"))
+	if addr == "" {
+		log.Fatal("ADDR is required. Set it in the .env file or as an environment variable.")
+	}
+	os.Setenv("ADDR", addr)
+
 	go server.Run()
 
-	fmt.Println("Running scraper (the startup scrape may run outside the visit window)")
+	fmt.Println("Loading the IKEA catalogue")
 	go func() {
 		scraper.LoadOrScrape()
 		// Pick today's product as soon as the first products are available.
@@ -34,19 +37,13 @@ func main() {
 	fmt.Println("Activate CRON schedule for scraper")
 	sched := strings.TrimSpace(os.Getenv("SCRAPE_CRON_SCHED"))
 	if sched == "" {
-		// Default value
-		sched = "0 6 * * 1"
+		log.Fatal("SCRAPE_CRON_SCHED is required. Set it in the .env file or as an environment variable.")
 	}
 	fmt.Println("Scheduled scrapes run at", sched)
 	c := cron.New()
-	_, err = c.AddFunc(sched, func() {
+	_, err := c.AddFunc(sched, func() {
 		fmt.Println("Running scheduled scraper")
-		err := scraper.Scrape()
-		if errors.Is(err, scraper.ErrOutsideVisitTime) {
-			fmt.Println("Skipping scheduled scrape:", err)
-			return
-		}
-		if err != nil {
+		if err := scraper.Scrape(); err != nil {
 			// A failed scrape should not take the game server down. The next
 			// scheduled run can try again.
 			fmt.Println("Scheduled scrape failed:", err)

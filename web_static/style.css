@@ -5,78 +5,103 @@
 }
 
 navbar {
-    background-color: #fadbd9ff;
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
     width: 100%;
-    height: 60px;
-    border-bottom: 1px solid rgba(46, 45, 44, 0.07);
+    height: 80px;
+    padding: 0 24px;
+    background: #ffffff;
+    border-bottom: 1px solid var(--ikea-line);
+    z-index: 10;
 }
 
 #hamburger-button {
-    float: left;
-    margin: 10px;
-    line-height: 0;
     display: none;
+    flex: none;
+    margin-right: 4px;
     cursor: pointer;
 }
 
 #logo {
-    margin: 20px;
-    display: inline-block;
-    line-height: 0;
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    text-decoration: none;
+}
+
+#logo img {
+    display: block;
+    width: auto;
+    height: 40px;
 }
 
 #external-links {
-    float: right;
-    margin: 10px 10px 0 0;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: auto;
 }
 
-.icon-button,
-.cool-button {
-    display: inline-block;
-    margin-right: 8px;
-    border-radius: 16px;
-    background: #ffffff;
-    padding: 10px;
+.icon-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: transparent;
+    padding: 0;
     line-height: 0;
+    cursor: pointer;
+    transition: background-color 120ms ease;
 }
 
-.icon-button > img,
-.cool-button > img {
-    height: 20px;
-    width: 20px;
+.icon-button:hover {
+    background: var(--ikea-surface);
 }
 
-.icon-button.primary {
-    background: var(--hk-red);
+.icon-button > img {
+    height: 22px;
+    width: 22px;
 }
 
 .cool-button {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: fit-content;
-    padding: 12px 24px;
     gap: 8px;
-    border-radius: 24px;
-    color: var(--hk-red);
-    font-family: "Outfit", sans-serif;
+    height: 100%;
+    padding: 0 2px;
+    background: transparent;
+    color: var(--ikea-text);
+    font-family: inherit;
     font-size: 16px;
-    font-weight: 500;
+    font-weight: 400;
+    line-height: 1;
+    border-bottom: 2px solid transparent;
+    transition: color 120ms ease, border-color 120ms ease;
+}
+
+/* IKEA's own header uses plain text links; the icons are used in the mobile
+   drawer where the rows have more room. */
+.cool-button > img {
+    display: none;
+}
+
+.cool-button:hover {
+    color: var(--ikea-blue);
 }
 
 #mode-picker {
     display: flex;
-    justify-content: center;
-    gap: 4px;
-    margin: auto;
-    position: absolute;
-    top: 8px;
-    left: 0;
-    right: 0;
-    width: fit-content;
+    align-items: stretch;
+    gap: 28px;
+    height: 100%;
+    margin-left: 32px;
 }
 
 #mode-picker #close-button {
@@ -88,16 +113,29 @@ navbar {
 }
 
 #mode-picker a {
+    display: flex;
     text-decoration: none;
 }
 
+/* Active mode: blue text with the IKEA-style underline at the bottom edge. */
+.cool-button.active {
+    color: var(--ikea-blue);
+    font-weight: 700;
+    border-bottom-color: var(--ikea-blue);
+}
+
 @media (max-width: 1100px) {
-    #hamburger-button {
-        display: block;
+    navbar {
+        height: 72px;
+        padding: 0 16px;
     }
 
-    #logo {
-        margin-left: 0;
+    #hamburger-button {
+        display: inline-flex;
+    }
+
+    #logo img {
+        height: 34px;
     }
 
     #mode-picker {
@@ -106,9 +144,15 @@ navbar {
         bottom: 0;
         right: unset;
         left: -100vw;
-        width: 100vw;
         display: none;
-        background: #fff;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+        width: 100vw;
+        height: auto;
+        margin: 0;
+        padding-top: 76px;
+        background: #ffffff;
         transition: 200ms cubic-bezier(0.4, 0, 0.2, 1);
     }
 
@@ -118,73 +162,68 @@ navbar {
 
     #mode-picker a {
         display: block;
-        color: #000;
-    }
-
-    #mode-picker #close-button {
-        position: absolute;
-        top: 0;
-        right: 0;
-        padding: 24px 16px;
-        cursor: pointer;
     }
 
     #mode-picker a .cool-button {
         width: 100%;
+        height: auto;
         justify-content: flex-start;
-        color: #000;
-        padding: 16px;
-        border-bottom: 1px solid var(--hk-line);
-        border-radius: 0;
+        gap: 14px;
+        padding: 18px 24px;
+        color: var(--ikea-text);
+        background: #ffffff;
+        border-bottom: 1px solid var(--ikea-line);
+        font-size: 17px;
+        font-weight: 400;
+    }
+
+    #mode-picker a .cool-button > img {
+        display: block;
+        width: 24px;
+        height: 24px;
+    }
+
+    #mode-picker a .cool-button.active {
+        color: var(--ikea-blue);
+        background: var(--ikea-surface);
+        border-bottom-color: var(--ikea-line);
+        font-weight: 700;
     }
 
     #mode-picker .mode-picker-title {
         display: block;
-        font-family: "Outfit", sans-serif;
-        font-size: 30px;
+        position: absolute;
+        top: 20px;
+        left: 24px;
+        color: var(--ikea-text);
+        font-size: 24px;
         font-weight: 700;
-        color: var(--hk-text);
-        margin: 16px;
     }
 
     #mode-picker #close-button {
-        display: block;
-    }
-}
-
-/* Active mode button */
-
-.cool-button.active {
-    background: var(--hk-red);
-    color: #ffffff;
-}
-
-.cool-button.active > img {
-    filter: brightness(0) invert(1);
-}
-
-@media (max-width: 1100px) {
-    #mode-picker a .cool-button.active {
-        background: var(--hk-red);
-        color: #ffffff;
-    }
-
-    #mode-picker a .cool-button.active > img {
-        filter: brightness(0) invert(1);
+        display: inline-flex;
+        position: absolute;
+        top: 12px;
+        right: 16px;
     }
 }
 
 /* Dagens vara */
 
 :root {
-    /* Palette lifted from hemkop.se */
-    --hk-red: #ea182a;
-    --hk-red-dark: #cf1b2b;
-    --hk-blue: #005fcc;
-    --hk-text: #2e2d2c;
-    --hk-muted: #6e6a66;
-    --hk-bg: #f8f7f6;
-    --hk-line: #e6e3e0;
+    /* IKEA's brand palette: blue, yellow, white and a warm accent. */
+    --ikea-blue: #0058a3;
+    --ikea-blue-dark: #004f93;
+    --ikea-yellow: #ffdb00;
+    --ikea-yellow-soft: #fff6cc;
+    --ikea-red: #e00751;
+    --ikea-red-soft: #fde8ee;
+    --ikea-text: #111111;
+    --ikea-muted: #484848;
+    --ikea-bg: #ffffff;
+    --ikea-surface: #f5f5f5;
+    --ikea-line: #dfdfdf;
+    --ikea-radius: 4px;
 }
 
 [hidden] {
@@ -192,63 +231,86 @@ navbar {
 }
 
 body {
-    font-family: "Outfit", "objektiv", "Segoe UI", system-ui, sans-serif;
-    background: var(--hk-bg);
-    color: var(--hk-text);
+    display: flex;
+    flex-direction: column;
     min-height: 100vh;
+    font-family: "Noto Sans", "Noto IKEA", "Segoe UI", system-ui, sans-serif;
+    background: var(--ikea-bg);
+    color: var(--ikea-text);
 }
 
 .game-page {
     display: flex;
+    flex: 1;
     flex-direction: column;
     justify-content: flex-start;
-    gap: clamp(6px, 1.1vh, 14px);
-    max-width: 620px;
-    min-height: 100vh;
-    min-height: 100dvh;
+    gap: clamp(10px, 1.6vh, 18px);
+    width: 100%;
+    max-width: 760px;
     margin: 0 auto;
-    padding: 92px 16px 24px;
+    padding: 112px 24px 40px;
+}
+
+.site-footer {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 8px 24px 32px;
+    color: var(--ikea-muted);
+    font-size: 11px;
+    line-height: 1.5;
+    text-align: center;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+[role="button"]:focus-visible {
+    outline: 2px solid var(--ikea-blue);
+    outline-offset: 2px;
+}
+
+.game-header {
+    margin-bottom: 4px;
 }
 
 .game-header h1 {
-    font-size: clamp(21px, 3.1vh, 30px);
+    font-size: clamp(30px, 4.4vh, 42px);
     font-weight: 700;
-    line-height: 1.1;
-    letter-spacing: -0.01em;
-    color: var(--hk-text);
-    margin-bottom: 2px;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--ikea-text);
+    margin-bottom: 8px;
 }
 
 .game-header p {
-    font-size: clamp(12px, 1.7vh, 14px);
-    line-height: 1.35;
-    color: var(--hk-muted);
+    max-width: 640px;
+    font-size: clamp(14px, 1.9vh, 16px);
+    line-height: 1.5;
+    color: var(--ikea-muted);
 }
 
 .game-status {
     font-size: 14px;
-    color: var(--hk-muted);
+    color: var(--ikea-muted);
 }
 
 .product-card {
     display: flex;
     align-items: center;
-    gap: clamp(10px, 2vh, 22px);
-    padding: clamp(8px, 1.4vh, 16px);
+    gap: clamp(16px, 2.4vh, 28px);
+    padding: 0 0 clamp(16px, 2.4vh, 24px);
     background: #ffffff;
-    border: 1px solid var(--hk-line);
-    border-radius: 24px;
+    border-bottom: 1px solid var(--ikea-line);
 }
 
 .product-image {
     flex: none;
-    width: clamp(84px, 15vh, 150px);
-    height: clamp(84px, 15vh, 150px);
+    width: clamp(132px, 22vh, 220px);
+    height: clamp(132px, 22vh, 220px);
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #f4f2f0;
-    border-radius: 16px;
+    background: var(--ikea-surface);
     overflow: hidden;
 }
 
@@ -260,30 +322,65 @@ body {
 
 .product-details {
     display: flex;
+    flex: 1;
     flex-direction: column;
-    gap: 2px;
+    gap: 4px;
     min-width: 0;
     text-align: left;
 }
 
-.product-brand {
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--hk-muted);
+.product-category {
+    max-width: 100%;
+    font-size: 12px;
+    color: var(--ikea-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .product-name {
-    font-size: clamp(16px, 2.3vh, 22px);
-    font-weight: 600;
-    line-height: 1.2;
+    font-size: clamp(20px, 2.8vh, 28px);
+    font-weight: 700;
+    line-height: 1.1;
     overflow-wrap: anywhere;
 }
 
+.product-description {
+    font-size: clamp(14px, 2vh, 16px);
+    color: var(--ikea-muted);
+}
+
 .product-amount {
-    font-size: clamp(12px, 1.7vh, 15px);
-    color: var(--hk-muted);
+    font-size: clamp(13px, 1.8vh, 15px);
+    color: var(--ikea-muted);
+}
+
+/* A small yellow price tag with the price left blank: the thing to guess. */
+
+.product-tag {
+    display: flex;
+    flex: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    align-self: center;
+    min-width: 60px;
+    padding: 8px 12px;
+    background: var(--ikea-yellow);
+    color: var(--ikea-blue);
+    border-radius: 2px;
+}
+
+.product-tag span {
+    font-size: 28px;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.product-tag small {
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 1.1;
 }
 
 .guess-form {
@@ -293,8 +390,8 @@ body {
 }
 
 .guess-label {
-    font-size: 13px;
-    font-weight: 600;
+    font-size: 14px;
+    font-weight: 700;
 }
 
 .guess-row {
@@ -314,19 +411,24 @@ body {
     font-size: clamp(16px, 2.2vh, 19px);
     color: inherit;
     background: #ffffff;
-    border: 1.5px solid var(--hk-line);
-    border-radius: 16px;
+    border: 1px solid #929292;
+    border-radius: var(--ikea-radius);
     outline: none;
-    transition: border-color 120ms ease;
+    transition: border-color 120ms ease, box-shadow 120ms ease;
 }
 
 .guess-field input:focus {
-    border-color: var(--hk-red);
+    border-color: var(--ikea-blue);
+    box-shadow: 0 0 0 2px var(--ikea-blue);
+}
+
+.guess-field input::placeholder {
+    color: #767676;
 }
 
 .guess-field input:disabled {
-    background: #f2f0ee;
-    color: var(--hk-muted);
+    background: #f2f2f2;
+    color: var(--ikea-muted);
 }
 
 .guess-unit {
@@ -335,34 +437,35 @@ body {
     right: 14px;
     transform: translateY(-50%);
     font-size: 14px;
-    color: var(--hk-muted);
+    color: var(--ikea-muted);
 }
 
 .guess-submit {
-    padding: 0 24px;
+    padding: 0 28px;
     font-family: inherit;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 700;
     color: #ffffff;
-    background: var(--hk-red);
+    background: var(--ikea-blue);
     border: none;
-    border-radius: 16px;
+    border-radius: var(--ikea-radius);
+    min-height: 48px;
     cursor: pointer;
     transition: background-color 120ms ease;
 }
 
 .guess-submit:hover:not(:disabled) {
-    background: var(--hk-red-dark);
+    background: var(--ikea-blue-dark);
 }
 
 .guess-submit:disabled {
-    background: #f0c3c8;
+    background: #a9c7e5;
     cursor: default;
 }
 
 .guess-error {
     font-size: 13px;
-    color: var(--hk-red);
+    color: var(--ikea-red);
 }
 
 .attempts {
@@ -372,14 +475,22 @@ body {
 }
 
 .attempt-dot {
-    width: 9px;
-    height: 9px;
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
-    background: #d9d5d1;
+    background: #cccccc;
 }
 
 .attempt-dot.used {
-    background: var(--hk-red);
+    background: var(--ikea-blue);
+}
+
+.attempt-dot.used.warmth-warm {
+    background: var(--ikea-red);
+}
+
+.attempt-dot.used.warmth-correct {
+    background: var(--ikea-yellow);
 }
 
 .feedback {
@@ -388,8 +499,8 @@ body {
     gap: 8px;
     padding: clamp(7px, 1.1vh, 12px) 14px;
     background: #ffffff;
-    border: 1px solid var(--hk-line);
-    border-radius: 14px;
+    border: 1px solid var(--ikea-line);
+    border-radius: var(--ikea-radius);
 }
 
 .feedback strong {
@@ -402,20 +513,20 @@ body {
     flex: 1;
     min-width: 0;
     font-size: clamp(12px, 1.6vh, 14px);
-    color: var(--hk-muted);
+    color: var(--ikea-muted);
 }
 
 .feedback.warmth-warm {
-    border-color: #f3c9cd;
+    border-color: #f6c9d8;
 }
 
 .feedback.warmth-warm strong {
-    color: var(--hk-red);
+    color: var(--ikea-red);
 }
 
 .feedback.warmth-correct {
-    background: var(--hk-text);
-    border-color: var(--hk-text);
+    background: var(--ikea-blue);
+    border-color: var(--ikea-blue);
     color: #ffffff;
 }
 
@@ -433,11 +544,11 @@ body {
 }
 
 .guess-arrow.warm {
-    color: var(--hk-red);
+    color: var(--ikea-red);
 }
 
 .guess-arrow.cold {
-    color: var(--hk-blue);
+    color: var(--ikea-blue);
 }
 
 .feedback .guess-arrow {
@@ -462,12 +573,12 @@ body {
     padding: 5px 10px;
     font-size: 13px;
     background: #ffffff;
-    border: 1px solid var(--hk-line);
-    border-radius: 12px;
+    border: 1px solid var(--ikea-line);
+    border-radius: var(--ikea-radius);
 }
 
 .guess-item.warmth-correct {
-    border-color: var(--hk-red);
+    border-color: var(--ikea-blue);
 }
 
 .guess-number {
@@ -477,27 +588,27 @@ body {
     width: 17px;
     height: 17px;
     font-size: 10px;
-    font-weight: 600;
-    color: var(--hk-muted);
+    font-weight: 700;
+    color: var(--ikea-muted);
     border-radius: 50%;
-    background: #f1efec;
+    background: #eeeeee;
 }
 
 .guess-item.warmth-correct .guess-number {
-    background: var(--hk-red);
+    background: var(--ikea-blue);
     color: #ffffff;
 }
 
 .guess-value {
     flex: none;
-    font-weight: 600;
+    font-weight: 700;
     white-space: nowrap;
 }
 
 .guess-hint {
     overflow: hidden;
     font-size: 12px;
-    color: var(--hk-muted);
+    color: var(--ikea-muted);
     text-overflow: ellipsis;
     white-space: nowrap;
 }
@@ -506,59 +617,81 @@ body {
     padding: clamp(8px, 1.4vh, 16px);
     text-align: center;
     background: #ffffff;
-    border: 1px solid var(--hk-line);
-    border-radius: 20px;
+    border: 1px solid var(--ikea-line);
+    border-radius: 4px;
 }
 
 .answer.answer-win {
-    border-color: var(--hk-red);
+    border: 2px solid var(--ikea-blue);
 }
 
 .answer h3 {
     font-size: clamp(14px, 2vh, 18px);
+    font-weight: 700;
     margin-bottom: 2px;
 }
 
 .answer.answer-win h3 {
-    color: var(--hk-red);
+    color: var(--ikea-blue);
 }
 
+/* The revealed price is shown on an IKEA-style yellow price tag. */
+
 .answer-price {
+    display: inline-block;
+    margin-top: 4px;
+    padding: 4px 14px;
     font-size: clamp(17px, 2.6vh, 22px);
-    font-weight: 700;
+    font-weight: 800;
+    color: var(--ikea-blue);
+    background: var(--ikea-yellow);
+    border-radius: var(--ikea-radius);
 }
 
 .answer-note {
     margin-top: 2px;
     font-size: clamp(11px, 1.5vh, 13px);
-    color: var(--hk-muted);
+    color: var(--ikea-muted);
 }
 
 .answer-restart {
     display: inline-block;
     margin-top: clamp(6px, 1vh, 10px);
-    padding: 6px 20px;
+    padding: 10px 22px;
     font-size: clamp(13px, 1.8vh, 15px);
     font-weight: 700;
     color: #ffffff;
-    background: var(--hk-red);
-    border-radius: 999px;
+    background: var(--ikea-blue);
+    border-radius: var(--ikea-radius);
     text-decoration: none;
     transition: background-color 120ms ease;
 }
 
 .answer-restart:hover {
-    background: var(--hk-red-dark);
+    background: var(--ikea-blue-dark);
 }
 
 @media (max-width: 480px) {
     .game-page {
-        padding-top: 80px;
+        padding: 96px 16px 32px;
+    }
+
+    .site-footer {
+        padding: 8px 16px 28px;
     }
 
     .product-image {
-        width: 84px;
-        height: 84px;
+        width: 116px;
+        height: 116px;
+    }
+
+    .product-tag {
+        min-width: 48px;
+        padding: 5px 8px;
+    }
+
+    .product-tag span {
+        font-size: 22px;
     }
 
     .guess-submit {
@@ -601,8 +734,8 @@ body {
     gap: 10px;
     padding: clamp(14px, 2.2vh, 22px);
     background: #ffffff;
-    border: 1px solid var(--hk-line);
-    border-radius: 22px;
+    border: 1px solid var(--ikea-line);
+    border-radius: 4px;
 }
 
 .strid-card h2 {
@@ -621,22 +754,22 @@ body {
 .strid-count {
     font-size: 13px;
     font-weight: 600;
-    color: var(--hk-muted);
+    color: var(--ikea-muted);
 }
 
 .strid-hint {
     font-size: clamp(12px, 1.7vh, 14px);
     line-height: 1.45;
-    color: var(--hk-muted);
+    color: var(--ikea-muted);
 }
 
 .strid-error {
     padding: 10px 14px;
     font-size: 14px;
-    color: var(--hk-red);
-    background: #fde8ea;
-    border: 1px solid #f3c9cd;
-    border-radius: 14px;
+    color: var(--ikea-red);
+    background: var(--ikea-red-soft);
+    border: 1px solid #f6c9d8;
+    border-radius: var(--ikea-radius);
 }
 
 .strid-sr-only {
@@ -653,7 +786,7 @@ body {
 
 .strid-label {
     font-size: 13px;
-    font-weight: 600;
+    font-weight: 700;
 }
 
 #strid-join-form {
@@ -669,18 +802,19 @@ body {
     font-size: 17px;
     color: inherit;
     background: #ffffff;
-    border: 1.5px solid var(--hk-line);
-    border-radius: 14px;
+    border: 1px solid #929292;
+    border-radius: var(--ikea-radius);
     outline: none;
-    transition: border-color 120ms ease;
+    transition: border-color 120ms ease, box-shadow 120ms ease;
 }
 
 .strid-input:focus {
-    border-color: var(--hk-red);
+    border-color: var(--ikea-blue);
+    box-shadow: 0 0 0 2px var(--ikea-blue);
 }
 
 .strid-input::placeholder {
-    color: #b3aeaa;
+    color: #767676;
 }
 
 .strid-primary,
@@ -693,7 +827,7 @@ body {
     font-family: inherit;
     font-size: 15px;
     font-weight: 700;
-    border-radius: 999px;
+    border-radius: var(--ikea-radius);
     text-decoration: none;
     cursor: pointer;
     transition: background-color 120ms ease, color 120ms ease, border-color 120ms ease;
@@ -701,32 +835,32 @@ body {
 
 .strid-primary {
     color: #ffffff;
-    background: var(--hk-red);
+    background: var(--ikea-blue);
     border: none;
 }
 
 .strid-primary:hover:not(:disabled) {
-    background: var(--hk-red-dark);
+    background: var(--ikea-blue-dark);
 }
 
 .strid-primary:disabled {
-    background: #f0c3c8;
+    background: #a9c7e5;
     cursor: default;
 }
 
 .strid-secondary {
-    color: var(--hk-red);
+    color: var(--ikea-blue);
     background: #ffffff;
-    border: 1.5px solid #f3c9cd;
+    border: 1.5px solid var(--ikea-blue);
 }
 
 .strid-secondary:hover:not(:disabled) {
-    background: #fde8ea;
+    background: #eaf2fb;
 }
 
 .strid-secondary:disabled {
-    color: var(--hk-muted);
-    border-color: var(--hk-line);
+    color: var(--ikea-muted);
+    border-color: var(--ikea-line);
     cursor: default;
 }
 
@@ -762,7 +896,7 @@ body {
     font-weight: 600;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: var(--hk-muted);
+    color: var(--ikea-muted);
 }
 
 .strid-code {
@@ -772,7 +906,7 @@ body {
     line-height: 1.1;
     letter-spacing: 0.18em;
     text-indent: 0.18em;
-    color: var(--hk-red);
+    color: var(--ikea-blue);
 }
 
 .strid-copy-row {
@@ -799,14 +933,14 @@ body {
     justify-content: space-between;
     gap: 10px;
     padding: 10px 14px;
-    background: var(--hk-bg);
+    background: var(--ikea-bg);
     border: 1px solid transparent;
-    border-radius: 14px;
+    border-radius: var(--ikea-radius);
 }
 
 .strid-player.you {
-    background: #fff7f7;
-    border-color: #f3c9cd;
+    background: var(--ikea-yellow-soft);
+    border-color: #ffe680;
 }
 
 .strid-player-name {
@@ -833,14 +967,14 @@ body {
     font-weight: 700;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: var(--hk-muted);
-    background: #eeebe8;
+    color: var(--ikea-muted);
+    background: #f0f0f0;
     border-radius: 999px;
 }
 
 .strid-badge.host {
-    color: var(--hk-red);
-    background: #fde8ea;
+    color: var(--ikea-blue);
+    background: var(--ikea-yellow);
 }
 
 .strid-badge.ready {
@@ -849,26 +983,26 @@ body {
 }
 
 .strid-badge.you {
-    color: var(--hk-text);
-    background: #e9e4df;
+    color: var(--ikea-text);
+    background: #e6e6e6;
 }
 
 .strid-badge.offline {
-    color: var(--hk-muted);
+    color: var(--ikea-muted);
     background: transparent;
-    border: 1px solid var(--hk-line);
+    border: 1px solid var(--ikea-line);
 }
 
 .strid-badge.closest {
     margin-left: 6px;
     color: #ffffff;
-    background: var(--hk-red);
+    background: var(--ikea-blue);
 }
 
 .strid-badge.winner {
     margin-left: 6px;
     color: #ffffff;
-    background: var(--hk-red);
+    background: var(--ikea-blue);
 }
 
 .strid-waiting {
@@ -891,7 +1025,7 @@ body {
     font-size: clamp(19px, 3vh, 25px);
     font-weight: 700;
     font-variant-numeric: tabular-nums;
-    color: var(--hk-red);
+    color: var(--ikea-blue);
     white-space: nowrap;
 }
 
@@ -921,20 +1055,20 @@ body {
     gap: 1px;
     padding: 7px 6px;
     background: #ffffff;
-    border: 1px solid var(--hk-line);
-    border-radius: 14px;
+    border: 1px solid var(--ikea-line);
+    border-radius: var(--ikea-radius);
     text-align: center;
 }
 
 .strid-standing.you {
-    background: #fff7f7;
-    border-color: #f3c9cd;
+    background: var(--ikea-yellow-soft);
+    border-color: #ffe680;
 }
 
 .strid-standing-place {
     font-size: 10px;
-    font-weight: 600;
-    color: var(--hk-muted);
+    font-weight: 700;
+    color: var(--ikea-muted);
 }
 
 .strid-standing-name {
@@ -950,7 +1084,7 @@ body {
     font-size: 13px;
     font-weight: 700;
     font-variant-numeric: tabular-nums;
-    color: var(--hk-red);
+    color: var(--ikea-blue);
 }
 
 .strid-round-result {
@@ -959,8 +1093,8 @@ body {
     gap: 8px;
     padding: clamp(12px, 1.8vh, 18px);
     background: #ffffff;
-    border: 1px solid var(--hk-line);
-    border-radius: 20px;
+    border: 1px solid var(--ikea-line);
+    border-radius: 4px;
 }
 
 .strid-round-result h2 {
@@ -975,7 +1109,7 @@ body {
 .strid-closest {
     font-size: 13px;
     font-weight: 600;
-    color: var(--hk-red);
+    color: var(--ikea-blue);
 }
 
 .strid-results {
@@ -992,15 +1126,15 @@ body {
     gap: 10px;
     padding: 8px 10px;
     font-size: 13px;
-    border-radius: 11px;
+    border-radius: var(--ikea-radius);
 }
 
 .strid-result.closest {
-    background: #fff7f7;
+    background: var(--ikea-yellow-soft);
 }
 
 .strid-result.you {
-    box-shadow: inset 0 0 0 1px #f3c9cd;
+    box-shadow: inset 0 0 0 1px #ffe680;
 }
 
 .strid-result-name {
@@ -1018,7 +1152,7 @@ body {
 
 .strid-result-distance {
     font-size: 12px;
-    color: var(--hk-muted);
+    color: var(--ikea-muted);
     white-space: nowrap;
 }
 
@@ -1026,7 +1160,7 @@ body {
     min-width: 58px;
     font-weight: 700;
     font-variant-numeric: tabular-nums;
-    color: var(--hk-red);
+    color: var(--ikea-blue);
     text-align: right;
     white-space: nowrap;
 }
@@ -1039,8 +1173,8 @@ body {
     padding: clamp(20px, 3.4vh, 32px) 18px;
     text-align: center;
     background: #ffffff;
-    border: 2px solid var(--hk-red);
-    border-radius: 24px;
+    border: 2px solid var(--ikea-blue);
+    border-radius: 4px;
 }
 
 .strid-winner-badge {
@@ -1049,8 +1183,8 @@ body {
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--hk-red);
-    background: #fde8ea;
+    color: var(--ikea-blue);
+    background: var(--ikea-yellow);
     border-radius: 999px;
 }
 
@@ -1063,7 +1197,7 @@ body {
 .strid-winner-names {
     font-size: clamp(20px, 3.2vh, 28px);
     font-weight: 700;
-    color: var(--hk-red);
+    color: var(--ikea-blue);
     overflow-wrap: anywhere;
 }
 
@@ -1080,14 +1214,14 @@ body {
     align-items: center;
     gap: 10px;
     padding: 10px 12px;
-    background: var(--hk-bg);
+    background: var(--ikea-surface);
     border: 1px solid transparent;
-    border-radius: 13px;
+    border-radius: var(--ikea-radius);
 }
 
 .strid-final-row.you {
-    background: #fff7f7;
-    border-color: #f3c9cd;
+    background: var(--ikea-yellow-soft);
+    border-color: #ffe680;
 }
 
 .strid-final-place {
@@ -1097,8 +1231,8 @@ body {
     height: 26px;
     font-size: 12px;
     font-weight: 700;
-    color: var(--hk-red);
-    background: #fde8ea;
+    color: var(--ikea-blue);
+    background: var(--ikea-yellow);
     border-radius: 50%;
 }
 
@@ -1128,7 +1262,7 @@ button.answer-restart {
 }
 
 button.answer-restart:disabled {
-    background: #f0c3c8;
+    background: #a9c7e5;
     cursor: default;
 }
 
@@ -1191,7 +1325,7 @@ button.answer-restart:disabled {
 .strid-recap-table th,
 .strid-recap-table td {
     padding: 8px 4px;
-    border-bottom: 1px solid var(--hk-line);
+    border-bottom: 1px solid var(--ikea-line);
     text-align: right;
     white-space: nowrap;
 }
@@ -1201,8 +1335,8 @@ button.answer-restart:disabled {
     font-weight: 700;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: var(--hk-muted);
-    background: var(--hk-bg);
+    color: var(--ikea-muted);
+    background: var(--ikea-bg);
 }
 
 .strid-recap-table th:nth-child(1),
@@ -1223,14 +1357,14 @@ button.answer-restart:disabled {
 }
 
 .strid-recap-table th.you {
-    color: var(--hk-red);
-    background: #fde8ea;
+    color: var(--ikea-blue);
+    background: var(--ikea-yellow);
 }
 
 .strid-recap-round {
     width: 34px;
     font-weight: 700;
-    color: var(--hk-muted);
+    color: var(--ikea-muted);
 }
 
 .strid-recap-product,
@@ -1245,12 +1379,12 @@ button.answer-restart:disabled {
     display: block;
     font-size: 11px;
     font-weight: 400;
-    color: var(--hk-muted);
+    color: var(--ikea-muted);
     white-space: normal;
 }
 
 .strid-recap-price {
-    color: var(--hk-muted);
+    color: var(--ikea-muted);
 }
 
 .strid-recap-guess {
@@ -1259,11 +1393,11 @@ button.answer-restart:disabled {
 }
 
 .strid-recap-guess.you {
-    background: #fff7f7;
+    background: var(--ikea-yellow-soft);
 }
 
 .strid-recap-guess.missing {
-    color: #c4bfba;
+    color: #b3b3b3;
 }
 
 .strid-recap-guess.exact {
@@ -1274,13 +1408,35 @@ button.answer-restart:disabled {
 
 .strid-recap-guess.closest {
     font-weight: 700;
-    color: var(--hk-red);
-    background: #fde8ea;
+    color: var(--ikea-blue);
+    background: var(--ikea-yellow-soft);
 }
 
 @media (max-width: 480px) {
     .strid-recap-table th,
     .strid-recap-table td {
         padding: 7px 6px;
+    }
+}
+
+/* Mobile header: keep the logo readable next to the menu button. */
+
+@media (max-width: 480px) {
+    #logo img {
+        height: 30px;
+    }
+
+    .icon-button {
+        width: 40px;
+        height: 40px;
+    }
+
+    .icon-button > img {
+        width: 20px;
+        height: 20px;
+    }
+
+    #external-links {
+        gap: 0;
     }
 }

@@ -5,7 +5,7 @@
  * som server-sent events; den här filen ritar bara det den får.     *
  * ---------------------------------------------------------------- */
 
-const STRID_STORAGE_PREFIX = "hemkopdle:strid:";
+const STRID_STORAGE_PREFIX = "ikeadle:strid:";
 
 const strid = {
     code: "",
@@ -97,7 +97,8 @@ function cache_strid_elements() {
         card: "product-card",
         image: "product-image",
         name: "product-name",
-        brand: "product-brand",
+        category: "product-category",
+        description: "product-description",
         amount: "product-amount",
 
         guessForm: "strid-guess-form",
@@ -182,7 +183,7 @@ function open_invite(event) {
 
     const code = sEls.codeInput.value.trim().toUpperCase();
     if (!/^[A-Z0-9]{4}$/.test(code)) {
-        show_error("Koden ska vara fyra tecken (A–Z eller 0–9).");
+        show_error("Koden ska vara fyra tecken (A-Z eller 0-9).");
         return;
     }
 
@@ -535,7 +536,7 @@ function lobby_note(state, you) {
         return "Alla måste vara redo innan matchen kan starta.";
     }
     if (you.host) {
-        return "Alla är redo – du kan starta matchen.";
+        return "Alla är redo - du kan starta matchen.";
     }
     return "Alla är redo. Väntar på att värden startar matchen…";
 }
@@ -630,8 +631,8 @@ function render_match(changed) {
     if (guessing && guessed) {
         const value = you.guess !== undefined && you.guess !== null ? you.guess : strid.lastGuess;
         sEls.guessLocked.textContent = value !== null && value !== undefined
-            ? "Du gissade " + format_kr(value) + ". Väntar på att andra kunder ska gissa…"
-            : "Du har gissat. Väntar på att andra kunder ska gissa…";
+            ? "Du gissade " + format_kr(value) + ". Väntar på att andra spelare ska gissa…"
+            : "Du har gissat. Väntar på att andra spelare ska gissa…";
     }
 
     sEls.guessInput.disabled = !showForm;
@@ -652,8 +653,10 @@ function fill_product(product) {
     sEls.image.src = product.image_url || "";
     sEls.image.alt = product.name || "Varan";
     sEls.name.textContent = product.name || "";
-    sEls.brand.textContent = product.brand || "";
-    sEls.brand.hidden = !product.brand;
+    sEls.category.textContent = product.category || "";
+    sEls.category.hidden = !product.category;
+    sEls.description.textContent = product.description || "";
+    sEls.description.hidden = !product.description;
     sEls.amount.textContent = product.amount || "";
     sEls.amount.hidden = !product.amount;
 }
@@ -674,7 +677,7 @@ function render_standings() {
 
         const place = document.createElement("span");
         place.className = "strid-standing-place";
-        place.textContent = player.place ? "#" + player.place : "#–";
+        place.textContent = player.place ? "#" + player.place : "#-";
 
         const name = document.createElement("span");
         name.className = "strid-standing-name";
@@ -822,7 +825,7 @@ function render_finished() {
 
         const place = document.createElement("span");
         place.className = "strid-final-place";
-        place.textContent = player.place ? player.place : "–";
+        place.textContent = player.place ? player.place : "-";
 
         const name = document.createElement("span");
         name.className = "strid-final-name";
@@ -953,7 +956,7 @@ function render_recap(state) {
 
             const guess = guesses[index];
             if (!has_number(guess)) {
-                cell.textContent = "–";
+                cell.textContent = "-";
                 cell.classList.add("missing");
             } else {
                 cell.textContent = format_kr(guess);
@@ -1085,7 +1088,11 @@ function format_kr(value) {
     if (!Number.isFinite(value)) {
         return "";
     }
-    return value.toFixed(2).replace(".", ",") + " kr";
+    const whole = Math.abs(value - Math.round(value)) < 0.005;
+    return new Intl.NumberFormat("sv-SE", {
+        minimumFractionDigits: whole ? 0 : 2,
+        maximumFractionDigits: 2,
+    }).format(value) + " kr";
 }
 
 function format_points(value) {

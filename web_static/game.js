@@ -61,7 +61,8 @@ function cache_elements() {
     els.card = document.getElementById("product-card");
     els.image = document.getElementById("product-image");
     els.name = document.getElementById("product-name");
-    els.brand = document.getElementById("product-brand");
+    els.category = document.getElementById("product-category");
+    els.description = document.getElementById("product-description");
     els.amount = document.getElementById("product-amount");
     els.form = document.getElementById("guess-form");
     els.input = document.getElementById("guess-input");
@@ -131,8 +132,10 @@ function fill_product_card(product) {
     els.image.src = product.image_url || "";
     els.image.alt = product.name || "Varan";
     els.name.textContent = product.name || "";
-    els.brand.textContent = product.brand || "";
-    els.brand.hidden = !product.brand;
+    els.category.textContent = product.category || "";
+    els.category.hidden = !product.category;
+    els.description.textContent = product.description || "";
+    els.description.hidden = !product.description;
     els.amount.textContent = product.amount || "";
     els.amount.hidden = !product.amount;
 }
@@ -379,14 +382,20 @@ function describe_guess(guess) {
 }
 
 function join_parts(...parts) {
-    return parts.filter(Boolean).join(" – ");
+    return parts.filter(Boolean).join(" - ");
 }
 
 function format_kr(value) {
     if (!Number.isFinite(value)) {
         return "";
     }
-    return value.toFixed(2).replace(".", ",") + " kr";
+    // IKEA prices are whole kronor, so only show decimals for a guess that
+    // actually has them. Intl also gives the Swedish thousands separator.
+    const whole = Math.abs(value - Math.round(value)) < 0.005;
+    return new Intl.NumberFormat("sv-SE", {
+        minimumFractionDigits: whole ? 0 : 2,
+        maximumFractionDigits: 2,
+    }).format(value) + " kr";
 }
 
 /* --------------------------- Persistence ------------------------- */

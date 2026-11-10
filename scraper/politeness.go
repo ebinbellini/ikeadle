@@ -1,8 +1,7 @@
 package scraper
 
 import (
-	"errors"
-	"fmt"
+	"log"
 	"net/http"
 	"os"
 	"strings"
@@ -10,45 +9,17 @@ import (
 	"time"
 )
 
-// hemkop.se/robots.txt asks for a ten second crawl delay and allows visits
-// between 04:00 and 08:45 UTC. The values are kept here in one place so the
-// startup scrape, the scheduled scrape and the HTTP client cannot drift apart.
-const (
-	robotsCrawlDelay       = 10 * time.Second
-	robotsVisitStartMinute = 4 * 60
-	robotsVisitEndMinute   = 8*60 + 45
-)
-
-// ErrOutsideVisitTime is returned by the scheduled scrape when the current time
-// is outside hemkop.se's visit window. The first startup scrape deliberately
-// bypasses that window so a new installation still gets products.
-var ErrOutsideVisitTime = errors.New("outside hemkop.se visit time (04:00-08:45 UTC)")
-
-// withinVisitTime reports whether now is inside robots.txt's visit window.
-// The window is inclusive at the start and exclusive at the end.
-func withinVisitTime(now time.Time) bool {
-	utc := now.UTC()
-	minute := utc.Hour()*60 + utc.Minute()
-	return minute >= robotsVisitStartMinute && minute < robotsVisitEndMinute
-}
-
-func ensureVisitTime(now time.Time) error {
-	if withinVisitTime(now) {
-		return nil
-	}
-	return fmt.Errorf("%w, current time is %s UTC", ErrOutsideVisitTime, now.UTC().Format("15:04"))
-}
-
-// crawlDelay parses the configured delay
+// crawlDelay parses the configured delay. An empty or invalid value falls back
+// to the polite default.
 func crawlDelay() time.Duration {
 	raw := strings.TrimSpace(os.Getenv("SCRAPE_DELAY"))
 	if raw == "" {
-		return robotsCrawlDelay
+		log.Fatal("SCRAPE_DELAY is required. Set it in the .env file or as an environment variable.")
 	}
 
 	delay, err := time.ParseDuration(raw)
-	if err != nil {
-		return robotsCrawlDelay
+	if err != nil || delay < 0 {
+		log.Fatal("SCRAPE_DELAY is invalid. Set it in the .env file or as an environment variable.")
 	}
 	return delay
 }

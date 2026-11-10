@@ -52,11 +52,12 @@ type pageData struct {
 // productCard is the product a game page shows. The price is not part of it:
 // that is what the player guesses.
 type productCard struct {
-	HasProduct bool
-	Name       string
-	Brand      string
-	Amount     string
-	ImageURL   string
+	HasProduct  bool
+	Name        string
+	Description string
+	Amount      string
+	Category    string
+	ImageURL    string
 }
 
 // gamePageData feeds the game board that both playable modes share. Only the
@@ -158,11 +159,12 @@ func productCardFrom(product Product, ok bool) productCard {
 	}
 
 	return productCard{
-		HasProduct: true,
-		Name:       product.Name,
-		Brand:      product.Brand,
-		Amount:     product.Amount,
-		ImageURL:   product.ImageURL,
+		HasProduct:  true,
+		Name:        product.Name,
+		Description: product.Description,
+		Amount:      product.Amount,
+		Category:    product.CategoryPath,
+		ImageURL:    product.ImageURL,
 	}
 }
 
@@ -173,7 +175,7 @@ func DailyPage(w http.ResponseWriter, r *http.Request) {
 
 	data := gamePageData{
 		pageData: pageData{
-			Title:      "Hemköpdle - Dagens vara",
+			Title:      "IKEAdle - Dagens vara",
 			ActiveLink: "/",
 			Modes:      modes,
 		},
@@ -208,7 +210,7 @@ func StridPage(w http.ResponseWriter, r *http.Request) {
 
 	renderPage(w, stridPage, stridPageData{
 		pageData: pageData{
-			Title:      "Hemköpdle - Kund mot kund",
+			Title:      "IKEAdle - Kund mot kund",
 			ActiveLink: "/strid",
 			Modes:      modes,
 		},

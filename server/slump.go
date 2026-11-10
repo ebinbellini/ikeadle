@@ -36,7 +36,7 @@ func SlumpPage(w http.ResponseWriter, r *http.Request) {
 
 	data := gamePageData{
 		pageData: pageData{
-			Title:      "Hemköpdle - Jag har tur",
+			Title:      "IKEAdle - Jag har tur",
 			ActiveLink: "/slump",
 			Modes:      modes,
 		},

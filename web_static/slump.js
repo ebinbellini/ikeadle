@@ -6,7 +6,7 @@
  * which draws a new product.                                        *
  * ---------------------------------------------------------------- */
 
-const SLUMP_STORAGE_PREFIX = "hemkopdle:slump:";
+const SLUMP_STORAGE_PREFIX = "ikeadle:slump:";
 
 function slump_config(id) {
     return {

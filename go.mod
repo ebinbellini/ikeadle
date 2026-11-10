@@ -1,4 +1,4 @@
-module github.com/ebinbellini/hemkopdle
+module github.com/ebinbellini/ikeadle
 
 go 1.27.0
 

@@ -358,7 +358,7 @@ func (l *stridLobby) join(rawName string) (*stridPlayer, error) {
 
 	name, ok := normalizeStridName(rawName)
 	if !ok {
-		return nil, newStridError(http.StatusBadRequest, "ange ett användarnamn (1–20 tecken)")
+		return nil, newStridError(http.StatusBadRequest, "ange ett användarnamn (1-20 tecken)")
 	}
 	if l.nameTakenLocked(name, nil) {
 		return nil, newStridError(http.StatusConflict, "namnet är redan taget")
@@ -395,7 +395,7 @@ func (l *stridLobby) ready(token, rawName string) error {
 
 	name, ok := normalizeStridName(rawName)
 	if !ok {
-		return newStridError(http.StatusBadRequest, "ange ett användarnamn (1–20 tecken)")
+		return newStridError(http.StatusBadRequest, "ange ett användarnamn (1-20 tecken)")
 	}
 	if l.nameTakenLocked(name, player) {
 		return newStridError(http.StatusConflict, "namnet är redan taget")

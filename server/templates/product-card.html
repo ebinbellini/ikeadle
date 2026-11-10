@@ -5,11 +5,17 @@
              alt="{{if .HasProduct}}{{.Name}}{{else}}Varan{{end}}">
     </div>
     <div class="product-details">
-        <span class="product-brand" id="product-brand"
-              {{- if or (not .HasProduct) (not .Brand)}} hidden{{end}}>{{.Brand}}</span>
+        <span class="product-category" id="product-category"
+              {{- if or (not .HasProduct) (not .Category)}} hidden{{end}}>{{.Category}}</span>
         <h2 class="product-name" id="product-name">{{.Name}}</h2>
+        <span class="product-description" id="product-description"
+              {{- if or (not .HasProduct) (not .Description)}} hidden{{end}}>{{.Description}}</span>
         <span class="product-amount" id="product-amount"
               {{- if or (not .HasProduct) (not .Amount)}} hidden{{end}}>{{.Amount}}</span>
+    </div>
+    <div class="product-tag" aria-hidden="true">
+        <span>?</span>
+        <small>kr</small>
     </div>
 </article>
 {{- end}}
