@@ -97,7 +97,9 @@ func SlumpGuessHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	writeJSON(w, http.StatusOK, guessScore(product, guess))
+	response := guessScore(product, guess)
+	recordGuess(guessModeSlump, product, guess)
+	writeJSON(w, http.StatusOK, response)
 }
 
 // SlumpAnswerHandler reveals the price of the product a slump game is playing.

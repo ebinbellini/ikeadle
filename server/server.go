@@ -89,6 +89,7 @@ func newMux() *http.ServeMux {
 	mux.HandleFunc("GET /slump", SlumpPage)
 	mux.HandleFunc("GET /strid", StridPage)
 	mux.HandleFunc("GET /strid/{code}", StridPage)
+	mux.HandleFunc("GET /statistik", StatsPage)
 
 	// Game API
 	mux.HandleFunc("/api/daily", DailyHandler)

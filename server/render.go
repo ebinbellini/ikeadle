@@ -23,6 +23,7 @@ const (
 	dailyPage = "daily"
 	slumpPage = "slump"
 	stridPage = "strid"
+	statsPage = "statistik"
 )
 
 // Mode is one entry in the mode picker in the navbar.
@@ -33,11 +34,13 @@ type Mode struct {
 }
 
 // modes is shared by every page so the navbar stays identical everywhere. The
-// order is the order shown to the player.
+// order is the order shown to the player. Statistics is not a game mode, but it
+// lives in the same menu so every page can reach it.
 var modes = []Mode{
 	{Href: "/", Label: "Dagens vara", Icon: "/icons/calendar.svg"},
 	{Href: "/slump", Label: "Jag har tur", Icon: "/icons/cart.svg"},
 	{Href: "/strid", Label: "Kund mot kund", Icon: "/icons/fight.svg"},
+	{Href: "/statistik", Label: "Statistik", Icon: "/icons/statistik.svg"},
 }
 
 // pageData is what the shared layout and the navbar get from every page.
@@ -100,8 +103,8 @@ var pageTemplates = sync.OnceValues(func() (map[string]*template.Template, error
 		"templates/guess-board.html",
 	}
 
-	pages := make(map[string]*template.Template, 3)
-	for _, page := range []string{dailyPage, slumpPage, stridPage} {
+	pages := make(map[string]*template.Template, 4)
+	for _, page := range []string{dailyPage, slumpPage, stridPage, statsPage} {
 		files := append([]string{"templates/pages/" + page + ".html"}, shared...)
 		tmpl, err := template.New(page).ParseFS(templateFS, files...)
 		if err != nil {

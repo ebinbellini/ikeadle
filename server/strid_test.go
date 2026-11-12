@@ -377,6 +377,9 @@ func TestStridAPI(t *testing.T) {
 	withStridTestProducts(t)
 	withShortStridRounds(t)
 
+	store := openTestGuessStore(t)
+	useGuessStoreForTest(t, store)
+
 	server := httptest.NewServer(newMux())
 	defer server.Close()
 
@@ -427,6 +430,14 @@ func TestStridAPI(t *testing.T) {
 		"token": create.Token,
 		"guess": 10,
 	}, http.StatusOK)
+
+	guesses := refreshAndLoadGuessStats(t, store)
+	if got, want := guesses.TotalGuesses, 1; got != want {
+		t.Fatalf("strid guess was not saved: TotalGuesses = %d, want %d", got, want)
+	}
+	if got, want := guesses.MedianErrorText, "0"+nbsp+"%"; got != want {
+		t.Errorf("strid guess median = %q, want %q", got, want)
+	}
 
 	// The event stream must start with a state event for the same player.
 	request, err := http.NewRequest(http.MethodGet,

@@ -1478,3 +1478,838 @@ button.answer-restart:disabled {
         gap: 0;
     }
 }
+
+/* Statistik */
+
+.stats-page {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: clamp(18px, 2.6vh, 28px);
+    width: 100%;
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 112px 24px 48px;
+}
+
+.stats-header {
+    max-width: 760px;
+}
+
+.stats-header h1 {
+    font-size: clamp(34px, 4.8vh, 48px);
+    font-weight: 700;
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+}
+
+.stats-intro {
+    max-width: 700px;
+    margin-top: 12px;
+    font-size: clamp(14px, 1.9vh, 17px);
+    line-height: 1.55;
+    color: var(--ikea-muted);
+}
+
+.stats-summary {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.stat-tile {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+    padding: 18px 18px 16px;
+    background: var(--ikea-surface);
+    border-radius: var(--ikea-radius);
+}
+
+.stat-tile-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ikea-muted);
+}
+
+.stat-tile-value {
+    font-size: clamp(22px, 2.7vw, 34px);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--ikea-blue);
+    overflow-wrap: anywhere;
+}
+
+.stat-tile-note {
+    font-size: 12px;
+    line-height: 1.35;
+    color: var(--ikea-muted);
+}
+
+.stat-tile-highlight {
+    background: var(--ikea-yellow);
+}
+
+.stat-tile-highlight .stat-tile-label,
+.stat-tile-highlight .stat-tile-note,
+.stat-tile-highlight .stat-tile-value {
+    color: var(--ikea-blue);
+}
+
+.stats-card {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: clamp(20px, 3vw, 32px);
+    background: #ffffff;
+    border: 1px solid var(--ikea-line);
+    border-radius: var(--ikea-radius);
+}
+
+.stats-card-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.stats-card-head h2 {
+    font-size: clamp(20px, 2.4vw, 26px);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+}
+
+.stats-card-head p {
+    max-width: 640px;
+    margin-top: 6px;
+    font-size: clamp(13px, 1.6vw, 15px);
+    line-height: 1.5;
+    color: var(--ikea-muted);
+}
+
+.stats-legend {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    line-height: 1.45;
+    color: var(--ikea-muted);
+}
+
+.legend-swatch {
+    flex: none;
+    width: 12px;
+    height: 12px;
+    background: var(--ikea-yellow);
+    border-radius: 2px;
+}
+
+.stats-empty {
+    padding: 28px;
+    background: var(--ikea-surface);
+    border-left: 4px solid var(--ikea-yellow);
+    border-radius: var(--ikea-radius);
+}
+
+.stats-empty h2 {
+    margin-bottom: 6px;
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.stats-empty p {
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--ikea-muted);
+}
+
+/* Histogram */
+
+.price-histogram {
+    display: flex;
+    align-items: stretch;
+    gap: clamp(3px, 0.7vw, 8px);
+    height: clamp(240px, 30vw, 320px);
+    padding-top: 24px;
+    border-bottom: 1px solid var(--ikea-text);
+}
+
+.histogram-column {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.histogram-track {
+    position: relative;
+    display: flex;
+    flex: 1;
+    align-items: flex-end;
+    justify-content: center;
+    min-height: 0;
+}
+
+.histogram-bar {
+    width: 100%;
+    height: var(--bar);
+    background: var(--ikea-blue);
+    border-radius: 2px 2px 0 0;
+    transition: background-color 120ms ease;
+}
+
+.histogram-bar.has-products {
+    min-height: 3px;
+}
+
+.histogram-bar.is-median {
+    background: var(--ikea-yellow);
+}
+
+.histogram-column:hover .histogram-bar {
+    background: var(--ikea-blue-dark);
+}
+
+.histogram-column:hover .histogram-bar.is-median {
+    background: #f2cf00;
+}
+
+.histogram-count {
+    position: absolute;
+    right: 0;
+    bottom: calc(var(--bar) + 6px);
+    left: 0;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--ikea-text);
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+}
+
+.histogram-label {
+    padding-top: 8px;
+    font-size: 10px;
+    line-height: 1.2;
+    color: var(--ikea-muted);
+    text-align: center;
+    white-space: nowrap;
+}
+
+/* The table is the same data as the chart, for anyone who prefers numbers. */
+
+.stats-data {
+    padding-top: 12px;
+    border-top: 1px solid var(--ikea-line);
+}
+
+.stats-data summary {
+    color: var(--ikea-blue);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.stats-data summary:hover {
+    text-decoration: underline;
+}
+
+.stats-table {
+    width: 100%;
+    margin-top: 12px;
+    border-collapse: collapse;
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+}
+
+.stats-table th,
+.stats-table td {
+    padding: 8px 4px;
+    border-bottom: 1px solid var(--ikea-line);
+    text-align: right;
+    white-space: nowrap;
+}
+
+.stats-table th {
+    color: var(--ikea-muted);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.stats-table th:first-child,
+.stats-table td:first-child {
+    text-align: left;
+}
+
+.stats-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Category price chart */
+
+.category-chart {
+    display: flex;
+    flex-direction: column;
+}
+
+.category-scale {
+    display: grid;
+    grid-template-columns: minmax(160px, 240px) minmax(0, 1fr) 82px;
+    align-items: end;
+    gap: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--ikea-line);
+}
+
+.category-scale-info,
+.category-scale-median {
+    color: var(--ikea-muted);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.category-scale-median {
+    text-align: right;
+}
+
+.category-scale-ticks {
+    position: relative;
+    height: 14px;
+    color: var(--ikea-muted);
+    font-size: 10px;
+    font-variant-numeric: tabular-nums;
+}
+
+.category-scale-ticks span {
+    position: absolute;
+    top: 0;
+    transform: translateX(-50%);
+    white-space: nowrap;
+}
+
+.category-scale-ticks span:first-child {
+    transform: none;
+    text-align: left;
+}
+
+.category-scale-ticks span:last-child {
+    transform: translateX(-100%);
+    text-align: right;
+}
+
+.category-list {
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+}
+
+.category-row {
+    display: grid;
+    grid-template-columns: minmax(160px, 240px) minmax(0, 1fr) 82px;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--ikea-line);
+}
+
+.category-row:last-child {
+    border-bottom: none;
+}
+
+.category-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.category-name {
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+}
+
+.category-meta {
+    color: var(--ikea-muted);
+    font-size: 11px;
+    line-height: 1.3;
+    font-variant-numeric: tabular-nums;
+}
+
+.category-track {
+    height: 14px;
+    background: var(--ikea-surface);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.category-bar {
+    display: block;
+    height: 100%;
+    background: var(--ikea-blue);
+    border-radius: 2px;
+    transition: width 300ms ease;
+}
+
+.category-bar.has-products {
+    min-width: 4px;
+}
+
+.category-median {
+    justify-self: end;
+    padding: 5px 10px;
+    color: var(--ikea-blue);
+    background: var(--ikea-yellow);
+    border-radius: 2px;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.2;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+}
+
+.stats-source {
+    max-width: 760px;
+    color: var(--ikea-muted);
+    font-size: 12px;
+    line-height: 1.55;
+}
+
+.stats-updated {
+    flex: none;
+    color: var(--ikea-muted);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.stats-error {
+    padding: 12px 14px;
+    color: var(--ikea-red);
+    background: var(--ikea-red-soft);
+    border: 1px solid #f6c9d8;
+    border-radius: var(--ikea-radius);
+    font-size: 14px;
+    line-height: 1.45;
+}
+
+.stats-empty h3 {
+    margin-bottom: 4px;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.guess-tile-under .stat-tile-value {
+    color: var(--ikea-blue);
+}
+
+.guess-tile-over .stat-tile-value {
+    color: var(--ikea-red);
+}
+
+.guess-tile-exact .stat-tile-value {
+    color: var(--ikea-muted);
+}
+
+/* Guesses: a diverging chart around zero */
+
+.guess-chart {
+    display: flex;
+    flex-direction: column;
+}
+
+.guess-scale {
+    display: grid;
+    grid-template-columns: minmax(160px, 240px) minmax(0, 1fr) 82px;
+    align-items: end;
+    gap: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--ikea-line);
+}
+
+.guess-scale-info,
+.guess-scale-value {
+    color: var(--ikea-muted);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.guess-scale-value {
+    text-align: right;
+}
+
+.guess-scale-ticks {
+    position: relative;
+    height: 14px;
+    color: var(--ikea-muted);
+    font-size: 10px;
+    font-variant-numeric: tabular-nums;
+}
+
+.guess-scale-ticks span {
+    position: absolute;
+    top: 0;
+    transform: translateX(-50%);
+    white-space: nowrap;
+}
+
+.guess-scale-ticks span:first-child {
+    transform: none;
+    text-align: left;
+}
+
+.guess-scale-ticks span:last-child {
+    transform: translateX(-100%);
+    text-align: right;
+}
+
+.guess-list {
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+}
+
+.guess-row {
+    display: grid;
+    grid-template-columns: minmax(160px, 240px) minmax(0, 1fr) 82px;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--ikea-line);
+}
+
+.guess-row:last-child {
+    border-bottom: none;
+}
+
+.guess-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.guess-name {
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+}
+
+.guess-meta {
+    color: var(--ikea-muted);
+    font-size: 11px;
+    line-height: 1.3;
+    font-variant-numeric: tabular-nums;
+}
+
+.guess-row.low-sample .guess-meta {
+    color: #767676;
+}
+
+.guess-track {
+    position: relative;
+    height: 18px;
+    background: var(--ikea-surface);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+/* The zero line is the reference the under/over bars diverge from. */
+.guess-track::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    z-index: 1;
+    width: 1px;
+    background: #b9b9b9;
+}
+
+.guess-bar {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    z-index: 2;
+    border-radius: 2px;
+}
+
+.guess-bar.under {
+    background: var(--ikea-blue);
+}
+
+.guess-bar.over {
+    background: var(--ikea-red);
+}
+
+.guess-bar.is-exact {
+    left: 50%;
+    width: 4px;
+    margin-left: -2px;
+    background: var(--ikea-yellow);
+}
+
+.guess-bar.is-capped {
+    border-right: 2px dashed rgba(255, 255, 255, 0.75);
+}
+
+.guess-bar.under.is-capped {
+    border-right: none;
+    border-left: 2px dashed rgba(255, 255, 255, 0.75);
+}
+
+.guess-value {
+    justify-self: end;
+    padding: 5px 10px;
+    border-radius: 2px;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.2;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+}
+
+.guess-value.under {
+    color: var(--ikea-blue);
+    background: #eaf2fb;
+}
+
+.guess-value.over {
+    color: var(--ikea-red);
+    background: var(--ikea-red-soft);
+}
+
+.guess-value.exact {
+    color: var(--ikea-blue);
+    background: var(--ikea-yellow);
+}
+
+.guess-legend {
+    flex-wrap: wrap;
+    column-gap: 8px;
+}
+
+.legend-under {
+    background: var(--ikea-blue);
+}
+
+.legend-over {
+    background: var(--ikea-red);
+}
+
+.legend-line {
+    flex: none;
+    width: 2px;
+    height: 14px;
+    background: #b9b9b9;
+}
+
+.stats-table-wrap {
+    overflow-x: auto;
+    margin-top: 12px;
+    scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
+}
+
+.stats-table-wrap .stats-table {
+    margin-top: 0;
+}
+
+@media (max-width: 860px) {
+    .stats-summary {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    /* A vertical histogram cannot keep its interval labels readable on a
+       phone, so the same columns become rows with a horizontal track. */
+    .price-histogram {
+        flex-direction: column;
+        gap: 5px;
+        height: auto;
+        padding-top: 0;
+        border-bottom: none;
+    }
+
+    .histogram-column {
+        display: grid;
+        grid-template-columns: 78px minmax(0, 1fr) 48px;
+        grid-template-areas: "label track count";
+        align-items: center;
+        gap: 10px;
+        height: 22px;
+    }
+
+    .histogram-track {
+        display: block;
+        grid-area: track;
+        height: 16px;
+        background: var(--ikea-surface);
+        border-radius: 2px;
+        overflow: hidden;
+    }
+
+    .histogram-bar {
+        width: var(--bar);
+        height: 100%;
+        border-radius: 2px;
+    }
+
+    .histogram-bar.has-products {
+        min-width: 3px;
+        min-height: 0;
+    }
+
+    .histogram-count {
+        position: static;
+        grid-area: count;
+        font-size: 11px;
+        text-align: right;
+    }
+
+    .histogram-label {
+        grid-area: label;
+        padding-top: 0;
+        font-size: 11px;
+        text-align: left;
+        white-space: normal;
+    }
+
+    .category-scale {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-areas: "ticks";
+        padding-bottom: 4px;
+        border-bottom: none;
+    }
+
+    .category-scale-info,
+    .category-scale-median {
+        display: none;
+    }
+
+    .category-scale-ticks {
+        grid-area: ticks;
+    }
+
+    .category-row {
+        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-areas:
+            "info median"
+            "track track";
+        row-gap: 10px;
+    }
+
+    .category-info {
+        grid-area: info;
+    }
+
+    .category-track {
+        grid-area: track;
+    }
+
+    .category-median {
+        grid-area: median;
+    }
+
+    .guess-scale {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-areas: "ticks";
+        padding-bottom: 4px;
+        border-bottom: none;
+    }
+
+    .guess-scale-info,
+    .guess-scale-value {
+        display: none;
+    }
+
+    .guess-scale-ticks {
+        grid-area: ticks;
+    }
+
+    .guess-row {
+        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-areas:
+            "info value"
+            "track track";
+        row-gap: 10px;
+    }
+
+    .guess-info {
+        grid-area: info;
+    }
+
+    .guess-track {
+        grid-area: track;
+    }
+
+    .guess-value {
+        grid-area: value;
+    }
+}
+
+@media (max-width: 560px) {
+    .stats-page {
+        gap: 18px;
+        padding: 96px 16px 36px;
+    }
+
+    .stats-card {
+        padding: 18px 16px;
+        gap: 16px;
+    }
+
+    .stats-card-head {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .stat-tile {
+        padding: 14px 14px 12px;
+    }
+
+    .stat-tile-value {
+        font-size: 22px;
+    }
+
+    .histogram-column {
+        grid-template-columns: 72px minmax(0, 1fr) 42px;
+        gap: 8px;
+    }
+
+    .category-name {
+        font-size: 14px;
+    }
+
+    .category-median {
+        padding: 4px 8px;
+        font-size: 12px;
+    }
+
+    .guess-name {
+        font-size: 14px;
+    }
+
+    .guess-value {
+        padding: 4px 8px;
+        font-size: 12px;
+    }
+
+    .guess-scale-ticks {
+        font-size: 9px;
+    }
+}

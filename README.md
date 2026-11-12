@@ -17,7 +17,7 @@ Copy `.env.example` to `.env` and edit the values therein.
 ## Run
 
 ```bash
-go run .
+go run ikeadle.go
 ```
 
 Then open <http://localhost:2760>.
@@ -27,6 +27,26 @@ Then open <http://localhost:2760>.
 - Dagens vara: one IKEA product per day.
 - Jag har tur: a random product with six guesses.
 - Kund mot kund: compete in a lobby of 2-5 players.
+
+## Statistics
+
+`/statistik` has two halves:
+
+- **Catalogue numbers**: a histogram of how many products fall in each price
+  band, and the median price and full price range for every top-level category.
+  These are calculated from the playable product pool only.
+- **Guess numbers**: how far above or below the real price guesses land, per
+  top-level category. Valid guesses from all three game modes are stored
+  anonymously in a local SQLite database (`GUESS_DB_PATH`, default
+  `ikeadle.db`). Only product id, price, guess, category, mode and time are
+  stored — no names, accounts, IP addresses or lobby codes.
+
+A cron job rebuilds the guess aggregates daily (`GUESS_STATS_CRON_SCHED`,
+default `10 0 * * *`), and once at startup so a restart does not leave the page
+empty. The page is server-rendered and needs no JavaScript.
+
+The database file is created automatically, kept out of git by `ikeadle.db*` in
+`.gitignore`, and can be moved with `GUESS_DB_PATH`.
 
 ## How the scraper works
 

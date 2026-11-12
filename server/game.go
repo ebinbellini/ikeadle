@@ -120,6 +120,18 @@ func ProductCount() int {
 	return len(products)
 }
 
+// productSnapshot returns a copy of the playable pool. The statistics page
+// calculates from the copy so a scrape can swap the pool without holding the
+// lock for the whole calculation.
+func productSnapshot() []Product {
+	productsMu.RLock()
+	defer productsMu.RUnlock()
+
+	snapshot := make([]Product, len(products))
+	copy(snapshot, products)
+	return snapshot
+}
+
 // ProductByID returns a playable product by id. The slump mode uses it so the
 // item a game started with keeps working even after the pool was re-scraped.
 func ProductByID(id string) (Product, bool) {
@@ -388,7 +400,9 @@ func GuessHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	writeJSON(w, http.StatusOK, guessScore(product, guess))
+	response := guessScore(product, guess)
+	recordGuess(guessModeDaily, product, guess)
+	writeJSON(w, http.StatusOK, response)
 }
 
 // AnswerHandler reveals the price of the product of the day. The frontend calls

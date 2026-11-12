@@ -23,6 +23,15 @@ func main() {
 	}
 	os.Setenv("ADDR", addr)
 
+	// Rebuild the guess aggregates from whatever is already in the SQLite log,
+	// so a restart does not leave the statistics page empty until midnight.
+	fmt.Println("Updating guess statistics")
+	if err := server.RefreshGuessStats(); err != nil {
+		// Statistics are a nice-to-have; a broken database must not stop the
+		// game from starting.
+		fmt.Println("Could not update guess statistics:", err)
+	}
+
 	go server.Run()
 
 	fmt.Println("Loading the IKEA catalogue")
@@ -58,6 +67,23 @@ func main() {
 		fmt.Println("Picking a new daily product")
 		if err := server.PickDailyProduct(); err != nil {
 			fmt.Println("Could not pick daily product:", err)
+		}
+	})
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println("Activate CRON schedule for guess statistics")
+	guessStatsSched := strings.TrimSpace(os.Getenv("GUESS_STATS_CRON_SCHED"))
+	if guessStatsSched == "" {
+		// Just after midnight, so the page has fresh numbers in the morning.
+		guessStatsSched = "10 0 * * *"
+	}
+	fmt.Println("Guess statistics update runs at", guessStatsSched)
+	_, err = c.AddFunc(guessStatsSched, func() {
+		fmt.Println("Updating guess statistics")
+		if err := server.RefreshGuessStats(); err != nil {
+			fmt.Println("Could not update guess statistics:", err)
 		}
 	})
 	if err != nil {

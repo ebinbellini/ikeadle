@@ -104,6 +104,14 @@ type stridGuess struct {
 	Ore   int
 }
 
+// stridGuessResult names the round's product as well as the accepted guess, so
+// the HTTP layer can save anonymous guess statistics without reading lobby
+// state a second time (the round may advance between the two calls).
+type stridGuessResult struct {
+	Guess   float64
+	Product Product
+}
+
 type stridMatch struct {
 	Round    int
 	Phase    string
@@ -479,27 +487,34 @@ func (l *stridLobby) playAgain(token string) error {
 	return nil
 }
 
-func (l *stridLobby) guess(token string, raw float64) (float64, error) {
+func (l *stridLobby) guess(token string, raw float64) (stridGuessResult, error) {
 	l.mu.Lock()
 	defer l.mu.Unlock()
 
 	player, err := l.memberLocked(token)
 	if err != nil {
-		return 0, err
+		return stridGuessResult{}, err
 	}
 	if l.status != stridStatusPlaying || l.match == nil || l.match.Phase != stridPhaseGuessing {
-		return 0, newStridError(http.StatusConflict, "rundan är inte öppen för gissningar")
+		return stridGuessResult{}, newStridError(http.StatusConflict, "rundan är inte öppen för gissningar")
 	}
 	if time.Now().After(l.match.RoundEndsAt) {
-		return 0, newStridError(http.StatusConflict, "tiden är ute för den här rundan")
+		return stridGuessResult{}, newStridError(http.StatusConflict, "tiden är ute för den här rundan")
 	}
 	if _, exists := l.match.Guesses[player.Token]; exists {
-		return 0, newStridError(http.StatusConflict, "du har redan gissat")
+		return stridGuessResult{}, newStridError(http.StatusConflict, "du har redan gissat")
 	}
 
 	guess, ok := roundGuess(raw)
 	if !ok {
-		return 0, newStridError(http.StatusBadRequest, "gissningen måste vara ett positivt pris")
+		return stridGuessResult{}, newStridError(http.StatusBadRequest, "gissningen måste vara ett positivt pris")
+	}
+
+	// Capture the product before closeRoundLocked can append the round to the
+	// history and before the reveal timer can move on to the next round.
+	result := stridGuessResult{Guess: guess}
+	if l.match.Round >= 1 && l.match.Round <= len(l.match.Products) {
+		result.Product = l.match.Products[l.match.Round-1]
 	}
 
 	l.match.Guesses[player.Token] = stridGuess{
@@ -516,7 +531,7 @@ func (l *stridLobby) guess(token string, raw float64) (float64, error) {
 
 	l.touchLocked()
 	l.broadcastLocked()
-	return guess, nil
+	return result, nil
 }
 
 func (l *stridLobby) state(token string) (stridState, error) {

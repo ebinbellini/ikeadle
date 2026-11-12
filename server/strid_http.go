@@ -214,7 +214,8 @@ func StridGuessHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	writeJSON(w, http.StatusOK, stridGuessResponse{Guess: guess})
+	recordGuess(guessModeStrid, guess.Product, guess.Guess)
+	writeJSON(w, http.StatusOK, stridGuessResponse{Guess: guess.Guess})
 }
 
 // StridStateHandler returns the full state for one player. The client uses it

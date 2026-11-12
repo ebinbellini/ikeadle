@@ -1,0 +1,276 @@
+{{define "content"}}
+<main class="stats-page" id="statistik">
+    <header class="stats-header">
+        <h1>Statistik</h1>
+        <p class="stats-intro">
+            Hur ser IKEA-sortimentet ut egentligen? Här är prisläget för varorna i
+            IKEAdle – och hur gissningarna landar.
+        </p>
+    </header>
+
+    {{if .Empty}}
+    <section class="stats-empty" aria-live="polite">
+        <h2>Statistiken laddas</h2>
+        <p>Sortimentet hämtas fortfarande. Ladda om sidan om en stund.</p>
+    </section>
+    {{else}}
+    <section class="stats-summary" aria-label="Översikt över sortimentet">
+        <div class="stat-tile">
+            <span class="stat-tile-label">Varor</span>
+            <span class="stat-tile-value">{{.Summary.ProductCount}}</span>
+            <span class="stat-tile-note">med pris och bild</span>
+        </div>
+        <div class="stat-tile">
+            <span class="stat-tile-label">Kategorier</span>
+            <span class="stat-tile-value">{{.Summary.CategoryCount}}</span>
+            <span class="stat-tile-note">toppkategorier</span>
+        </div>
+        <div class="stat-tile stat-tile-highlight">
+            <span class="stat-tile-label">Medianpris</span>
+            <span class="stat-tile-value">{{.Summary.MedianPrice}}</span>
+            <span class="stat-tile-note">mittenvara i sortimentet</span>
+        </div>
+        <div class="stat-tile">
+            <span class="stat-tile-label">Prisintervall</span>
+            <span class="stat-tile-value">{{.Summary.PriceRange}}</span>
+            <span class="stat-tile-note">billigast till dyrast</span>
+        </div>
+    </section>
+
+    <section class="stats-card" aria-labelledby="guess-stats-title">
+        <div class="stats-card-head">
+            <div>
+                <h2 id="guess-stats-title">Hur gissningarna landar</h2>
+                <p>
+                    Medianfelet per kategori, i procent av priset, sorterat efter
+                    antal gissningar. Ett negativt värde betyder att den typiska
+                    gissningen låg under priset, ett positivt att den låg över.
+                    Statistiken räknas om en gång om dagen.
+                </p>
+            </div>
+            {{if .GuessStats.Updated}}
+            <span class="stats-updated">Uppdaterad {{.GuessStats.Updated}}</span>
+            {{end}}
+        </div>
+
+        {{if .GuessStats.Error}}
+        <p class="stats-error">{{.GuessStats.ErrorText}}</p>
+        {{else if .GuessStats.HasGuesses}}
+        <div class="stats-summary guess-summary" aria-label="Översikt över gissningarna">
+            <div class="stat-tile">
+                <span class="stat-tile-label">Gissningar</span>
+                <span class="stat-tile-value">{{.GuessStats.TotalGuessesText}}</span>
+                <span class="stat-tile-note">sparade gissningar</span>
+            </div>
+            <div class="stat-tile guess-tile-under">
+                <span class="stat-tile-label">Underskattar</span>
+                <span class="stat-tile-value">{{.GuessStats.UnderShareText}}</span>
+                <span class="stat-tile-note">gissade under priset</span>
+            </div>
+            <div class="stat-tile guess-tile-over">
+                <span class="stat-tile-label">Överskattar</span>
+                <span class="stat-tile-value">{{.GuessStats.OverShareText}}</span>
+                <span class="stat-tile-note">gissade över priset</span>
+            </div>
+            <div class="stat-tile guess-tile-{{.GuessStats.MedianErrorDirection}}">
+                <span class="stat-tile-label">Medianfel</span>
+                <span class="stat-tile-value">{{.GuessStats.MedianErrorText}}</span>
+                <span class="stat-tile-note">för alla gissningar</span>
+            </div>
+        </div>
+
+        <div class="guess-chart">
+            <div class="guess-scale" aria-hidden="true">
+                <span class="guess-scale-info">Kategori</span>
+                <div class="guess-scale-ticks">
+                    {{- range .GuessStats.ScaleTicks}}
+                    <span style="left: {{.Position}}%">{{.Label}}</span>
+                    {{- end}}
+                </div>
+                <span class="guess-scale-value">Medianfel</span>
+            </div>
+
+            <ol class="guess-list">
+                {{- range .GuessStats.Categories}}
+                <li class="guess-row{{if .LowSample}} low-sample{{end}}"
+                    title="{{.GuessLabel}}: {{.UnderShareText}} under, {{.OverShareText}} över, snittfel {{.MeanAbsoluteText}}">
+                    <div class="guess-info">
+                        <span class="guess-name">{{.Name}}</span>
+                        <span class="guess-meta">{{.GuessLabel}}{{if .LowSample}} · litet underlag{{end}}</span>
+                    </div>
+                    <div class="guess-track" aria-hidden="true">
+                        {{- if eq .MedianErrorDirection "exact"}}
+                        <span class="guess-bar is-exact"></span>
+                        {{- else}}
+                        <span class="guess-bar {{.MedianErrorDirection}}{{if .IsCapped}} is-capped{{end}}"
+                              style="left: {{.LeftPercent}}%; width: {{.WidthPercent}}%"></span>
+                        {{- end}}
+                    </div>
+                    <span class="guess-value {{.MedianErrorDirection}}">{{.MedianErrorText}}</span>
+                </li>
+                {{- end}}
+            </ol>
+        </div>
+
+        <p class="stats-legend guess-legend">
+            <span class="legend-swatch legend-under" aria-hidden="true"></span>
+            Underskattning
+            <span class="legend-swatch legend-over" aria-hidden="true"></span>
+            Överskattning
+            <span class="legend-line" aria-hidden="true"></span>
+            0 %
+        </p>
+        {{if .GuessStats.Capped}}
+        <p class="stats-legend">Staplar som sticker utanför skalan är kapade.</p>
+        {{end}}
+
+        <details class="stats-data">
+            <summary>Visa som tabell</summary>
+            <div class="stats-table-wrap">
+                <table class="stats-table guess-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Kategori</th>
+                            <th scope="col">Gissningar</th>
+                            <th scope="col">Medianfel</th>
+                            <th scope="col">Under</th>
+                            <th scope="col">Över</th>
+                            <th scope="col">Snittfel</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{- range .GuessStats.Categories}}
+                        <tr>
+                            <td>{{.Name}}</td>
+                            <td>{{.GuessesText}}</td>
+                            <td>{{.MedianErrorText}}</td>
+                            <td>{{.UnderShareText}}</td>
+                            <td>{{.OverShareText}}</td>
+                            <td>{{.MeanAbsoluteText}}</td>
+                        </tr>
+                        {{- end}}
+                    </tbody>
+                </table>
+            </div>
+        </details>
+        {{else}}
+        <div class="stats-empty guess-empty">
+            <h3>Inga gissningar ännu</h3>
+            <p>
+                Spela Dagens vara, Jag har tur eller Kund mot kund. Gissningarna
+                sparas anonymt och räknas samman en gång om dagen.
+            </p>
+        </div>
+        {{end}}
+    </section>
+
+    <section class="stats-card" aria-labelledby="price-distribution-title">
+        <div class="stats-card-head">
+            <div>
+                <h2 id="price-distribution-title">Antal varor per prisnivå</h2>
+                <p>
+                    Varje stapel är ett prisintervall. Siffran ovanför visar hur
+                    många varor som ligger i intervallet.
+                </p>
+            </div>
+        </div>
+
+        <div class="price-histogram" role="img"
+             aria-label="Histogram över antal varor per prisnivå. Medianpriset ligger i intervallet {{.MedianBucket}} kr.">
+            {{- range .Buckets}}
+            <div class="histogram-column" style="--bar: {{.BarPercent}}%"
+                 title="{{.Label}} kr: {{.CountText}} varor ({{.ShareText}})">
+                <div class="histogram-track">
+                    <span class="histogram-count">{{.CountText}}</span>
+                    <div class="histogram-bar{{if .HasProducts}} has-products{{end}}{{if .IsMedian}} is-median{{end}}"></div>
+                </div>
+                <span class="histogram-label">{{.Label}}</span>
+            </div>
+            {{- end}}
+        </div>
+
+        <p class="stats-legend">
+            <span class="legend-swatch" aria-hidden="true"></span>
+            Medianpriset {{.Summary.MedianPrice}} ligger i intervallet
+            {{.MedianBucket}} kr.
+        </p>
+
+        <details class="stats-data">
+            <summary>Visa som tabell</summary>
+            <table class="stats-table">
+                <thead>
+                    <tr>
+                        <th scope="col">Prisnivå</th>
+                        <th scope="col">Antal varor</th>
+                        <th scope="col">Andel</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{- range .Buckets}}
+                    <tr>
+                        <td>{{.Label}} kr</td>
+                        <td>{{.CountText}}</td>
+                        <td>{{.ShareText}}</td>
+                    </tr>
+                    {{- end}}
+                </tbody>
+            </table>
+        </details>
+    </section>
+
+    <section class="stats-card" aria-labelledby="category-prices-title">
+        <div class="stats-card-head">
+            <div>
+                <h2 id="category-prices-title">Prisnivåer per kategori</h2>
+                <p>
+                    Medianpriset för varje toppkategori, sorterat från dyrast till
+                    billigast. Skalan är logaritmisk eftersom sortimentet spänner
+                    över flera prisklasser.
+                </p>
+            </div>
+        </div>
+
+        <div class="category-chart">
+            <div class="category-scale" aria-hidden="true">
+                <span class="category-scale-info">Kategori</span>
+                <div class="category-scale-ticks">
+                    {{- range .ScaleTicks}}
+                    <span style="left: {{.Position}}%">{{.Label}}</span>
+                    {{- end}}
+                </div>
+                <span class="category-scale-median">Median</span>
+            </div>
+
+            <ol class="category-list">
+                {{- range .Categories}}
+                <li class="category-row">
+                    <div class="category-info">
+                        <span class="category-name">{{.Name}}</span>
+                        <span class="category-meta">{{.CountText}} varor · {{.RangeText}}</span>
+                    </div>
+                    <div class="category-track" aria-hidden="true">
+                        <span class="category-bar{{if .HasProducts}} has-products{{end}}"
+                              style="width: {{.BarPercent}}%"></span>
+                    </div>
+                    <span class="category-median">{{.MedianText}}</span>
+                </li>
+                {{- end}}
+            </ol>
+        </div>
+
+        <p class="stats-legend">
+            Staplarnas längd visar medianpriset. Prisintervallet under varje
+            kategori är den billigaste och dyraste varan i kategorin.
+        </p>
+    </section>
+
+    <p class="stats-source">
+        Sortimentsstatistiken bygger på {{.Summary.ProductCount}} varor ur IKEAdles
+        sortiment{{if .Updated}}, senast uppdaterat {{.Updated}}{{end}}.
+        Gissningsstatistiken sparar bara gissning, vara, pris, kategori,
+        spelläge och tid – inga namn, konton, IP-adresser eller lobbykoder – och
+        räknas om en gång om dagen.
+    </p>
+    {{end}}
+</main>
+{{- end}}
