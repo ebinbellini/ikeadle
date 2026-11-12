@@ -17,14 +17,17 @@
         <a href="{{.Href}}"{{if eq .Href $.ActiveLink}} aria-current="page"{{end}}>
             <div class="cool-button{{if eq .Href $.ActiveLink}} active{{end}}">
                 <img src="{{.Icon}}" alt="" width="30" height="30">
-                <span>{{.Label}}</span>
+                <span class="mode-label">{{.Label}}</span>
+                <svg class="mode-arrow" viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="m20.0008 12.0001-8-8.001-1.4143 1.414L16.1727 11H4v2h12.1723l-5.5868 5.5866 1.4141 1.4142 8.0012-8.0007z"></path>
+                </svg>
             </div>
         </a>
         {{- end}}
     </div>
     <div id="external-links">
-        <a href="https://www.youtube.com/watch?v=GIhcL8K4shg" target="_blank" rel="noopener" class="icon-button" aria-label="Support">
-            <img src="/icons/support.svg" alt="" width="30" height="30">
+        <a href="https://youtu.be/7pO39Sh6THg" target="_blank" rel="noopener" class="icon-button" aria-label="Support">
+            <img src="/icons/truck.svg" alt="" width="30" height="30">
         </a>
         <a href="https://ebinbellini.com/" target="_blank" rel="noopener" class="icon-button" aria-label="Ebin Bellini">
             <img src="/icons/web.svg" alt="" width="30" height="30">

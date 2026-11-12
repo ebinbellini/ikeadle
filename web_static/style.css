@@ -1,3 +1,20 @@
+/* IKEA's Noto IKEA webfonts, served locally from web_static/. */
+@font-face {
+    font-family: "Noto IKEA";
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url("/noto-ikea-400.latin.woff2") format("woff2");
+}
+
+@font-face {
+    font-family: "Noto IKEA";
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url("/noto-ikea-700.latin.woff2") format("woff2");
+}
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -92,6 +109,11 @@ navbar {
     display: none;
 }
 
+.mode-arrow {
+    display: none;
+    flex: none;
+}
+
 .cool-button:hover {
     color: var(--ikea-blue);
 }
@@ -183,9 +205,22 @@ navbar {
         height: 24px;
     }
 
-    #mode-picker a .cool-button.active {
+    .mode-arrow {
+        display: block;
+        width: 24px;
+        height: 24px;
+        margin-left: auto;
         color: var(--ikea-blue);
-        background: var(--ikea-surface);
+    }
+
+    .mode-arrow path {
+        fill: currentColor;
+    }
+
+    /* IKEA keeps the drawer labels black; only the icons carry the blue. */
+    #mode-picker a .cool-button.active {
+        color: var(--ikea-text);
+        background: #ffffff;
         border-bottom-color: var(--ikea-line);
         font-weight: 700;
     }
@@ -194,10 +229,13 @@ navbar {
         display: block;
         position: absolute;
         top: 20px;
-        left: 24px;
+        left: 0;
+        right: 0;
         color: var(--ikea-text);
         font-size: 24px;
         font-weight: 700;
+        text-align: center;
+        pointer-events: none;
     }
 
     #mode-picker #close-button {
@@ -234,7 +272,7 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    font-family: "Noto Sans", "Noto IKEA", "Segoe UI", system-ui, sans-serif;
+    font-family: "Noto IKEA", "Noto Sans", "Segoe UI", system-ui, sans-serif;
     background: var(--ikea-bg);
     color: var(--ikea-text);
 }

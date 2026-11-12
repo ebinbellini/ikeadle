@@ -60,7 +60,8 @@ type guessResponse struct {
 	// Result is "low", "high" or "correct" (seen from the guess' perspective).
 	Result string `json:"result"`
 	// Warmth is "correct", "warm" or "cold" and describes how close the guess
-	// was: within 50 öre counts as correct, within 5 kr or 20% as warm.
+	// was: within 5 % of the price counts as correct, within 10 kr or 20 % as
+	// warm.
 	Warmth string  `json:"warmth"`
 	Guess  float64 `json:"guess"`
 }
@@ -245,23 +246,23 @@ func writeDailyProduct(daily *DailyProduct) error {
 	return os.WriteFile(dailyStateFile, data, 0o644)
 }
 
-// Scoring rules for a guess. The absolute distances are in kronor.
+// Scoring rules for a guess. Relative distances are fractions of the price.
 const (
 	// MaxGuesses is how many guesses the player gets per day.
-	MaxGuesses = 6
-	// winTolerance is how close a guess has to be to count as correct
-	// (50 öre), so the player does not have to hit the exact öre.
-	winTolerance = 0.50
-	// warmAbsolute and warmRelative decide what still counts as "warm":
-	// within 5 kr or within 20% of the price.
-	warmAbsolute = 5.0
+	MaxGuesses = 4
+	// winTolerancePercent is how close a guess has to be, relative to the
+	// price, to count as correct (5 %), so the player does not have to hit the
+	// exact price and cheap and expensive products are judged the same way.
+	winTolerancePercent = 0.05
+	// warmAbsolute and warmRelative decide what still counts as "warm".
+	warmAbsolute = 10.0
 	warmRelative = 0.20
 )
 
 // toleranceText spells out the win tolerance for the game instructions, so the
 // wording and the rule itself cannot drift apart.
 func toleranceText() string {
-	return fmt.Sprintf("%.0f öre", winTolerance*100)
+	return fmt.Sprintf("%g %%", winTolerancePercent*100)
 }
 
 // isWarm reports whether a distance from the price still counts as warm. The
@@ -291,9 +292,10 @@ func guessScore(product Product, guess float64) guessResponse {
 
 	difference := guess - product.Price
 	distance := math.Abs(difference)
+	withinTolerance := product.Price > 0 && distance/product.Price <= winTolerancePercent
 
 	switch {
-	case distance <= winTolerance:
+	case withinTolerance:
 		response.Result = "correct"
 		response.Warmth = "correct"
 	case isWarm(distance, product.Price):
